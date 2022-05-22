@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <input type="text" placeholder="请输入长链接" id="longUrl">
+  <button onclick="submit()">确定</button>
+  <div>
+    <span>短链接:</span>
+    <a id="shortUrl"></a>
+  </div>
+  <script>
+    function submit(event) {
+      const url = document.querySelector("#longUrl").value
+      fetch('/create/shortLink', {
+        method: 'post',
+        body: url
+      }).then((res) => res.json()).then(({
+        code,
+        results
+      }) => {
+        if (code == 200) {
+          const a = document.querySelector("#shortUrl")
+          a.setAttribute('href', results)
+          a.innerText = results
+        }
+      })
+    }
+  </script>
+</body>
+
+</html>

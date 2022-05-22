@@ -16,21 +16,24 @@
     <a id="shortUrl"></a>
   </div>
   <script>
-    function submit(event) {
+    async function submit(event) {
       const url = document.querySelector("#longUrl").value
-      fetch('/create/shortLink', {
+      const {
+        data
+      } = await fetch('/link', {
         method: 'post',
-        body: url
-      }).then((res) => res.json()).then(({
-        code,
-        results
-      }) => {
-        if (code == 200) {
-          const a = document.querySelector("#shortUrl")
-          a.setAttribute('href', results)
-          a.innerText = results
+        body: JSON.stringify({
+          url
+        }),
+        headers: {
+          'Content-Type': 'application/json'
         }
-      })
+      }).then((res) => res.json())
+      console.log("🚀 ~ file: index.html ~ line 30 ~ submit ~ data", data)
+
+      const a = document.querySelector("#shortUrl")
+      a.setAttribute('href', data.shortUrl)
+      a.innerText = data.shortUrl
     }
   </script>
 </body>

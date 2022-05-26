@@ -1,31 +1,28 @@
 version: '1.0'
-name: pipeline-20220526
-displayName: pipeline-20220526
+name: uat-ci
+displayName: uat-ci-name
 triggers:
   trigger: auto
   push:
     branches:
       prefix:
-        - ''
+        - 'uat'
 stages:
-  - name: stage-cb074ee6
-    displayName: 未命名
-    strategy: naturally
-    trigger: auto
+  - name: ci
+    displayName: 编译
+    strategy: naturally # 阶段触发策略，naturally表示自然失败，fast表示快速失败
+    trigger: auto # 阶段触发方式，auto表示自动触发，manual表示手动触发
     executor: []
     steps:
       - step: build@docker
         name: build_docker
         displayName: 镜像构建
-        type: account
-        repository: '111111'
-        username: '18792809954'
-        password: happydang1215
         tag: ${GITEE_PIPELINE_BUILD_NUMBER}
         dockerfile: ./Dockerfile
         isCache: true
         strategy:
           retry: '0'
-permissions:
-  - role: admin
-    members: []
+
+# permissions:
+#   - role: admin
+#     members: []

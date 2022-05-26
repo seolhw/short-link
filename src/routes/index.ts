@@ -12,9 +12,10 @@ router.get('/', async (ctx, next) => {
 router.post('/link', async (ctx, next) => {
   const { url: longUrl } = ctx.request.body
 
-  const reg = /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/
+  const reg = /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+$/
 
   if (!reg.test(longUrl)) {
+    console.log(111)
     ctx.response.status = 400
     return ctx.body = {
       message: 'Invalid URL'
@@ -28,6 +29,7 @@ router.post('/link', async (ctx, next) => {
 
   if (item) {
     return ctx.body = {
+      code:200,
       data: { ...item, shortUrl: `${ctx.origin}/${item.shortKey}` }
     }
   }
@@ -45,7 +47,30 @@ router.post('/link', async (ctx, next) => {
   await db.write()
 
   return ctx.body = {
+    code:200,
     data: { ...entity, shortUrl: `${ctx.origin}/${entity.shortKey}` }
+  }
+})
+
+router.put('/links',async(ctx, next)=>{
+  const { shortKey ,isDelete} = ctx.request.body
+  await db.read()
+  const link = db.data?.link
+  const index = link?.findIndex((e) => e.shortKey === shortKey)
+  if(index!==undefined && db.data?.link){
+    const item= db.data?.link[index]
+    item.isDelete=isDelete
+  }
+  await db.write()
+  return ctx.body = {
+    code: 200
+  }
+})
+
+router.get('/getUrls',async(ctx, next)=>{
+  await db.read()
+  return ctx.body = {
+    data:db.data?.link.map((e)=>({...e,shortUrl:`${ctx.origin}/${e.shortKey}`}))
   }
 })
 
@@ -57,7 +82,7 @@ router.get('/:code', async (ctx, next) => {
   const link = db.data?.link
   const item = link?.find((e) => e.shortKey === code)
 
-  if (item) {
+  if (item && !item.isDelete) {
     ctx.redirect(item.longUrl);
     return
   }

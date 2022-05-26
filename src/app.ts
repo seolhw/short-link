@@ -7,6 +7,7 @@ import bodyparser from 'koa-bodyparser'
 import logger from 'koa-logger'
 import index from './routes/index.js'
 import path from 'path'
+import less from 'koa-less'
 import { fileURLToPath } from 'url'
 
 const app = new Koa()
@@ -22,6 +23,7 @@ app.use(bodyparser({
 }))
 app.use(json())
 app.use(logger())
+app.use(less(__dirname + '/public'));
 app.use(KoaStatic(__dirname + '/public'))
 
 app.use(views(__dirname + '/views'))

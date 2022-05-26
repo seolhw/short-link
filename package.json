@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev:copy": "node scripts/copy.js",
+    "dev:copy": "node scripts/copy-dev.js",
     "dev:tsc": "tsc -w",
     "dev:nodemon": "nodemon --watch dist dist/main.js",
-    "dev": "concurrently npm:dev:*"
+    "dev": "concurrently npm:dev:*",
+    "build": "tsc && node scripts/copy.js",
+    "start": "node dist/main.js"
   },
   "type": "module",
   "dependencies": {
@@ -14,8 +16,8 @@
     "debug": "^4.1.1",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.3.0",
-    "koa-convert": "^2.0.0",
     "koa-json": "^2.0.2",
+    "koa-less": "^0.0.3",
     "koa-logger": "^3.2.0",
     "koa-onerror": "^4.1.0",
     "koa-router": "^10.1.1",

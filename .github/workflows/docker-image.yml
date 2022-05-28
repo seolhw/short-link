@@ -17,12 +17,15 @@ jobs:
     - name: Build the Docker image
       id: docker-build
       run: |
-        docker build . --file Dockerfile --tag seolhw/my-image-name:$(date +%s)
-        echo "::set-output name=tag::$(date +%s)"
+        tag = $(date +%s)
+        docker build . --file Dockerfile --tag seolhw/my-image-name:${tag}
+        echo "::set-output name=tag::${tag}"
 
     - name: login docker hub
       run: docker login -u seolhw -p dear7758521
     - name: push docker hub
-      run: docker push seolhw/my-image-name:$(date +%s)
+      run: |
+        echo 当前tag为：${{steps.docker-build.outputs.tag}}
+        docker push seolhw/my-image-name:${{steps.docker-build.outputs.tag}}
 
 

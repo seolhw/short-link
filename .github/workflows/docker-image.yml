@@ -17,7 +17,7 @@ jobs:
     - name: Build the Docker image
       id: docker-build
       run: |
-        tag = $(date +%s)
+        tag=$(date +%s)
         docker build . --file Dockerfile --tag seolhw/my-image-name:${tag}
         echo "::set-output name=tag::${tag}"
 
